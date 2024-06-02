@@ -7,6 +7,19 @@
 <div class="text-center">
     <h1 class="display-4">Witamy w naszym sklepie internetowym!</h1>
     <p>Zobacz nasze najnowsze produkty:</p>
+
+    <!-- Formularz filtrowania -->
+    <form asp-action="Index" asp-controller="Home" method="get" class="form-inline mb-2">
+        <label class="mr-2">Sortuj według:</label>
+        <select name="sortOrder" class="form-control mr-2">
+            <option value="">Domyślnie</option>
+            <option value="name_desc">Nazwa (Z-A)</option>
+            <option value="price_asc">Cena (rosnąco)</option>
+            <option value="price_desc">Cena (malejąco)</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Sortuj</button>
+    </form>
+
     <div class="row">
         @foreach (var item in Model)
         {
