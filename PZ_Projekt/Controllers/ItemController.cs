@@ -48,16 +48,39 @@ namespace PZ_Projekt.Controllers
         // POST: Item/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Item item)
+        public async Task<IActionResult> Create(Item item)
         {
             if (ModelState.IsValid)
             {
+                if (item.ImageFile != null && item.ImageFile.Length > 0)
+                {
+                    // Generowanie unikalnej nazwy pliku
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(item.ImageFile.FileName);
+
+                    // Ustalenie ścieżki, w której plik zostanie zapisany (np. w folderze 'wwwroot/uploads')
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
+
+                    // Zapisanie przesłanego pliku na dysku
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await item.ImageFile.CopyToAsync(stream);
+                    }
+
+                    // Zapisanie ścieżki do pliku w bazie danych
+                    item.ImageUrl = "/uploads/" + fileName;
+                }
+
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(item);
         }
+
+
+
+
+
 
         // GET: Item/Edit/5
         public async Task<IActionResult> Edit(int? id)
