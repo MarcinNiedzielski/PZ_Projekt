@@ -26,12 +26,12 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Product.Name</td>
+                        <td>@item.Item.Name</td>
                         <td>@item.Quantity</td>
-                        <td>@item.Product.Price.ToString("C")</td>
-                        <td>@((item.Quantity * item.Product.Price).ToString("C"))</td>
+                        <td>@item.Item.Price.ToString("C")</td>
+                        <td>@((item.Quantity * item.Item.Price).ToString("C"))</td>
                         <td>
-                            <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.Product.Id })" class="btn btn-danger">Usuń</a>
+                            <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.Item.Id })" class="btn btn-danger">Usuń</a>
                         </td>
                     </tr>
                 }

@@ -9,5 +9,8 @@ namespace PZ_Projekt.Data
             : base(options)
         {
         }
+
+        public DbSet<PZ_Projekt.Models.Product> Product { get; set; } = default!;
+        public DbSet<PZ_Projekt.Models.Item> Item { get; set; } = default!;
     }
 }

@@ -1,11 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PZ_Projekt.Data;
 using PZ_Projekt.Models;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace OnlineStore.Controllers
+namespace PZ_Projekt.Controllers
 {
     public class CartController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public CartController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
@@ -14,24 +23,22 @@ namespace OnlineStore.Controllers
 
         public IActionResult AddToCart(int id)
         {
-            var products = new List<Product>
+            var item = _context.Item.Find(id);
+            if (item == null)
             {
-                new Product { Id = 1, Name = "Produkt 1", Description = "Opis produktu 1", Price = 10.99m, ImageUrl = "~/images/product1.jpg" },
-                new Product { Id = 2, Name = "Produkt 2", Description = "Opis produktu 2", Price = 20.99m, ImageUrl = "~/images/product2.jpg" },
-                new Product { Id = 3, Name = "Produkt 3", Description = "Opis produktu 3", Price = 30.99m, ImageUrl = "~/images/product3.jpg" }
-            };
+                return NotFound();
+            }
 
-            var product = products.Find(p => p.Id == id);
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
 
-            var cartItem = cart.Find(c => c.Product.Id == id);
+            var cartItem = cart.Find(c => c.Item.Id == id);
             if (cartItem != null)
             {
                 cartItem.Quantity++;
             }
             else
             {
-                cart.Add(new CartItem { Product = product, Quantity = 1 });
+                cart.Add(new CartItem { Item = item, Quantity = 1 });
             }
 
             HttpContext.Session.SetObjectAsJson("Cart", cart);
@@ -43,7 +50,7 @@ namespace OnlineStore.Controllers
         {
             var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
 
-            var cartItem = cart.Find(c => c.Product.Id == id);
+            var cartItem = cart.Find(c => c.Item.Id == id);
             if (cartItem != null)
             {
                 if (cartItem.Quantity > 1)
