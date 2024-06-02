@@ -16,11 +16,32 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder)
         {
-            var items = _context.Item.ToList();
-            return View(items);
+            ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["PriceSortParam"] = sortOrder == "price_asc" ? "price_desc" : "price_asc";
+
+            var items = _context.Item.AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    items = items.OrderByDescending(i => i.Name);
+                    break;
+                case "price_asc":
+                    items = items.OrderBy(i => i.Price);
+                    break;
+                case "price_desc":
+                    items = items.OrderByDescending(i => i.Price);
+                    break;
+                default:
+                    items = items.OrderBy(i => i.Name);
+                    break;
+            }
+
+            return View(items.ToList());
         }
+
 
         public IActionResult Privacy()
         {
