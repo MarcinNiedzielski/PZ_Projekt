@@ -2,28 +2,24 @@ using Microsoft.AspNetCore.Mvc;
 using PZ_Projekt.Models;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using PZ_Projekt.Data;
 
 namespace PZ_Projekt.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            var products = new List<Product>
-            {
-                new Product { Id = 1, Name = "Produkt 1", Description = "Opis produktu 1", Price = 10.99m, ImageUrl = "~/images/product1.jpg" },
-                new Product { Id = 2, Name = "Produkt 2", Description = "Opis produktu 2", Price = 20.99m, ImageUrl = "~/images/product2.jpg" },
-                new Product { Id = 3, Name = "Produkt 3", Description = "Opis produktu 3", Price = 30.99m, ImageUrl = "~/images/product3.jpg" }
-            };
-
-            return View(products);
+            var items = _context.Item.ToList();
+            return View(items);
         }
 
         public IActionResult Privacy()
