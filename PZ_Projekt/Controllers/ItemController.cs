@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
 using PZ_Projekt.Models;
+using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PZ_Projekt.Controllers
@@ -15,6 +19,7 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: Item/Index
         public async Task<IActionResult> Index()
         {
@@ -39,13 +44,13 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
+        [Authorize]
         // GET: Item/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Item/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Item item)
@@ -54,22 +59,14 @@ namespace PZ_Projekt.Controllers
             {
                 if (item.ImageFile != null && item.ImageFile.Length > 0)
                 {
-                    // Generowanie unikalnej nazwy pliku
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(item.ImageFile.FileName);
-
-                    // Ustalenie ścieżki, w której plik zostanie zapisany (np. w folderze 'wwwroot/uploads')
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
-
-                    // Zapisanie przesłanego pliku na dysku
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await item.ImageFile.CopyToAsync(stream);
                     }
-
-                    // Zapisanie ścieżki do pliku w bazie danych
                     item.ImageUrl = "/uploads/" + fileName;
                 }
-
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -77,11 +74,7 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
-
-
-
-
-
+        [Authorize]
         // GET: Item/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -98,10 +91,9 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
-        // POST: Item/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Item item)
+        public async Task<IActionResult> Edit(int id, Item item)
         {
             if (id != item.Id)
             {
@@ -112,7 +104,28 @@ namespace PZ_Projekt.Controllers
             {
                 try
                 {
-                    _context.Update(item);
+                    // Unikaj śledzenia istniejącej encji
+                    _context.Entry(item).State = EntityState.Modified;
+
+                    // Sprawdzanie, czy nowy obrazek został przesłany
+                    if (item.ImageFile == null)
+                    {
+                        // Jeśli nie przesłano nowego obrazka, zachowaj istniejącą wartość ImageUrl
+                        var existingItem = await _context.Item.FindAsync(id);
+                        item.ImageUrl = existingItem.ImageUrl;
+                    }
+                    else
+                    {
+                        // Jeśli przesłano nowy obrazek, zapisz go i zaktualizuj ImageUrl
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(item.ImageFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await item.ImageFile.CopyToAsync(stream);
+                        }
+                        item.ImageUrl = "/uploads/" + fileName;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -131,6 +144,9 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
+
+
+        [Authorize]
         // GET: Item/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -148,18 +164,16 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
-        // POST: Item/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var exercise = await _context.Item.FindAsync(id);
-            if (exercise != null)
+            var item = await _context.Item.FindAsync(id);
+            if (item != null)
             {
-                _context.Item.Remove(exercise);
+                _context.Item.Remove(item);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
