@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/CartController.cs
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
 using PZ_Projekt.Models;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PZ_Projekt.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,42 +20,64 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
-            return View(cart);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Item)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            return View(cart?.CartItems ?? new List<CartItem>());
         }
 
-        public IActionResult AddToCart(int id)
+        public async Task<IActionResult> AddToCart(int id)
         {
-            var item = _context.Item.Find(id);
+            var item = await _context.Item.FindAsync(id);
             if (item == null)
             {
                 return NotFound();
             }
 
-            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            var cartItem = cart.Find(c => c.Item.Id == id);
+            if (cart == null)
+            {
+                cart = new Cart { UserId = userId, CartItems = new List<CartItem>() };
+                _context.Cart.Add(cart);
+            }
+
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ItemId == id);
             if (cartItem != null)
             {
                 cartItem.Quantity++;
             }
             else
             {
-                cart.Add(new CartItem { Item = item, Quantity = 1 });
+                cart.CartItems.Add(new CartItem { Item = item, Quantity = 1 });
             }
 
-            HttpContext.Session.SetObjectAsJson("Cart", cart);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult RemoveFromCart(int id)
+        public async Task<IActionResult> RemoveFromCart(int id)
         {
-            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            var cartItem = cart.Find(c => c.Item.Id == id);
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ItemId == id);
             if (cartItem != null)
             {
                 if (cartItem.Quantity > 1)
@@ -59,11 +86,11 @@ namespace PZ_Projekt.Controllers
                 }
                 else
                 {
-                    cart.Remove(cartItem);
+                    cart.CartItems.Remove(cartItem);
                 }
-            }
 
-            HttpContext.Session.SetObjectAsJson("Cart", cart);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Index", "Cart");
         }
