@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
 using PZ_Projekt.Models;
@@ -15,6 +16,7 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: Item/Index
         public async Task<IActionResult> Index()
         {
@@ -38,13 +40,13 @@ namespace PZ_Projekt.Controllers
 
             return View(item);
         }
-
+        [Authorize]
         // GET: Item/Create
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize]
         // POST: Item/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,7 +83,7 @@ namespace PZ_Projekt.Controllers
 
 
 
-
+        [Authorize]
         // GET: Item/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -97,7 +99,7 @@ namespace PZ_Projekt.Controllers
             }
             return View(item);
         }
-
+        [Authorize]
         // POST: Item/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -130,7 +132,7 @@ namespace PZ_Projekt.Controllers
             }
             return View(item);
         }
-
+        [Authorize]
         // GET: Item/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -147,7 +149,7 @@ namespace PZ_Projekt.Controllers
 
             return View(item);
         }
-
+        [Authorize]
         // POST: Item/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
