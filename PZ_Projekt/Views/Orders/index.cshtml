@@ -1,0 +1,24 @@
+﻿@model IEnumerable<PZ_Projekt.Models.Order>
+
+<table>
+    <thead>
+        <tr>
+            <th>Imię i nazwisko</th>
+            <th>Adres</th>
+            <th>Opcja dostawy</th>
+            <th>Cena całkowita</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Name</td>
+                <td>@order.Address</td>
+                <td>@order.DeliveryOption</td>
+                <td>@order.TotalPrice</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

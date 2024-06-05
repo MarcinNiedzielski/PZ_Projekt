@@ -1,0 +1,24 @@
+﻿@model PZ_Projekt.Models.CheckoutViewModel
+
+<form asp-action="PlaceOrder" method="post">
+    <div>
+        <label for="Name">Imię i nazwisko:</label>
+        <input type="text" id="Name" name="Name" asp-for="Name" />
+    </div>
+    <div>
+        <label for="Address">Adres:</label>
+        <input type="text" id="Address" name="Address" asp-for="Address" />
+    </div>
+    <div>
+        <label for="DeliveryOption">Opcja dostawy:</label>
+        <select id="DeliveryOption" name="DeliveryOption" asp-for="DeliveryOption">
+            <option value="Odbiór w sklepie">Odbiór w sklepie</option>
+            <option value="Kurier">Kurier (9.99zł)</option>
+        </select>
+    </div>
+    <div>
+        <label for="TotalPrice">Cena całkowita:</label>
+        <input type="text" id="TotalPrice" name="TotalPrice" asp-for="TotalPrice" readonly />
+    </div>
+    <button type="submit">Złóż zamówienie</button>
+</form>
