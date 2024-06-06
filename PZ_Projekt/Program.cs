@@ -12,10 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>() // Dodaj obs³ugê ról
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-
-
 
 builder.Services.AddSession(); // Dodaj sesje
 
@@ -24,12 +23,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -37,8 +36,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession(); // Dodaj sesje
 app.UseAuthorization();
+app.UseSession(); // Dodaj sesje
+
+// Inicjalizacja roli administratora
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var adminRoleExists = await roleManager.RoleExistsAsync("Administrator");
+    if (!adminRoleExists)
+    {
+        await roleManager.CreateAsync(new IdentityRole("Administrator"));
+    }
+}
 
 app.MapControllerRoute(
     name: "default",
