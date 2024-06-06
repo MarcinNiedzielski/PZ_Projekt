@@ -8,33 +8,31 @@
     <div class="row">
         <!-- Filtry -->
         <div class="col-md-3">
-            <h4>Filtry</h4>
+            <h4 class="mb-3">Kategoria:</h4>
             <!-- Formularz filtrowania według kategorii -->
             <form asp-action="Index" asp-controller="Home" method="get" class="form-group">
-                <label for="categoryFilter">Filtruj po kategorii:</label>
-                <select id="categoryFilter" name="categoryFilter" class="form-control mb-2">
-                    <option value="">Wszystkie</option>
-                    <option value="GPU">GPU</option>
-                    <option value="CPU">CPU</option>
-                    <option value="RAM">RAM</option>
-                    <option value="zasilacze">Zasilacze</option>
-                    <option value="dysk">Dysk</option>
-                    <option value="chłodzenie">Chłodzenie</option>
-                </select>
+                <div class="btn-group-vertical" role="group" aria-label="Filtruj po kategorii">
+                    <button type="submit" name="categoryFilter" value="" class="btn btn-secondary">Wszystkie</button>
+                    <button type="submit" name="categoryFilter" value="GPU" class="btn btn-secondary">GPU</button>
+                    <button type="submit" name="categoryFilter" value="CPU" class="btn btn-secondary">CPU</button>
+                    <button type="submit" name="categoryFilter" value="RAM" class="btn btn-secondary">RAM</button>
+                    <button type="submit" name="categoryFilter" value="zasilacze" class="btn btn-secondary">Zasilacze</button>
+                    <button type="submit" name="categoryFilter" value="dysk" class="btn btn-secondary">Dysk</button>
+                    <button type="submit" name="categoryFilter" value="chłodzenie" class="btn btn-secondary">Chłodzenie</button>
+                </div>
                 <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
-                <button type="submit" class="btn btn-primary btn-block">Filtruj</button>
             </form>
             <!-- Formularz filtrowania według sortowania -->
-            <form asp-action="Index" asp-controller="Home" method="get" class="form-group">
-                <label for="sortOrder">Sortuj według:</label>
-                <select id="sortOrder" name="sortOrder" class="form-control mb-2">
-                    <option value="">Domyślnie</option>
+            <form asp-action="Index" asp-controller="Home" method="get" class="form-group mt-3">
+                <h4 class="mb-3">Sortuj według:</h4>
+                <select id="sortOrder" name="sortOrder" class="form-control" style="max-width: 150px;">
+                    <option value="">Nazwa (A-Z)</option>
                     <option value="name_desc">Nazwa (Z-A)</option>
                     <option value="price_asc">Cena (rosnąco)</option>
                     <option value="price_desc">Cena (malejąco)</option>
                 </select>
                 <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
-                <button type="submit" class="btn btn-primary btn-block">Sortuj</button>
+                <button type="submit" class="btn btn-primary mt-3">Filtruj</button>
             </form>
         </div>
         <!-- Produkty -->
