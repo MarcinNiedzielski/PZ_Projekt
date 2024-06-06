@@ -4,56 +4,62 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Witamy w naszym sklepie internetowym!</h1>
-    <p>Zobacz nasze najnowsze produkty:</p>
-
-    <!-- Formularz filtrowania -->
-    <form asp-action="Index" asp-controller="Home" method="get" class="form-inline mb-2">
-        <label class="mr-2">Sortuj według:</label>
-        <select id="sortOrder" name="sortOrder" class="form-control mr-2">
-            <option value="">Domyślnie</option>
-            <option value="name_desc">Nazwa (Z-A)</option>
-            <option value="price_asc">Cena (rosnąco)</option>
-            <option value="price_desc">Cena (malejąco)</option>
-        </select>
-        <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
-        <button type="submit" class="btn btn-primary">Sortuj</button>
-    </form>
-
-    <!-- Formularz filtrowania kategorii -->
-    <form asp-action="Index" asp-controller="Home" method="get" class="form-inline mb-2">
-        <label class="mr-2">Filtruj po kategorii:</label>
-        <select id="categoryFilter" name="categoryFilter" class="form-control mr-2">
-            <option value="">Wszystkie</option>
-            <option value="GPU">GPU</option>
-            <option value="CPU">CPU</option>
-            <option value="RAM">RAM</option>
-            <option value="zasilacze">Zasilacze</option>
-            <option value="dysk">Dysk</option>
-            <option value="chłodzenie">Chłodzenie</option>
-        </select>
-        <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
-        <button type="submit" class="btn btn-primary">Filtruj</button>
-    </form>
-
+<div class="container">
     <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-4">
-                <div class="card">
-                    <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
-                        <p class="card-text">@item.Price.ToString("C")</p>
-                        <a href="@Url.Action("Details", "Item", new { id = item.Id })" class="btn btn-info mt-2">Szczegóły</a>
-                        <button class="btn btn-primary addToCartButton" data-item-id="@item.Id">Dodaj do koszyka</button>
+        <!-- Filtry -->
+        <div class="col-md-3">
+            <h4>Filtry</h4>
+            <!-- Formularz filtrowania według kategorii -->
+            <form asp-action="Index" asp-controller="Home" method="get" class="form-group">
+                <label for="categoryFilter">Filtruj po kategorii:</label>
+                <select id="categoryFilter" name="categoryFilter" class="form-control mb-2">
+                    <option value="">Wszystkie</option>
+                    <option value="GPU">GPU</option>
+                    <option value="CPU">CPU</option>
+                    <option value="RAM">RAM</option>
+                    <option value="zasilacze">Zasilacze</option>
+                    <option value="dysk">Dysk</option>
+                    <option value="chłodzenie">Chłodzenie</option>
+                </select>
+                <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
+                <button type="submit" class="btn btn-primary btn-block">Filtruj</button>
+            </form>
+            <!-- Formularz filtrowania według sortowania -->
+            <form asp-action="Index" asp-controller="Home" method="get" class="form-group">
+                <label for="sortOrder">Sortuj według:</label>
+                <select id="sortOrder" name="sortOrder" class="form-control mb-2">
+                    <option value="">Domyślnie</option>
+                    <option value="name_desc">Nazwa (Z-A)</option>
+                    <option value="price_asc">Cena (rosnąco)</option>
+                    <option value="price_desc">Cena (malejąco)</option>
+                </select>
+                <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
+                <button type="submit" class="btn btn-primary btn-block">Sortuj</button>
+            </form>
+        </div>
+        <!-- Produkty -->
+        <div class="col-md-9">
+            <h1 class="display-4">Witamy w naszym sklepie internetowym!</h1>
+            <p>Zobacz nasze najnowsze produkty:</p>
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text">@item.Price.ToString("C")</p>
+                                <a href="@Url.Action("Details", "Item", new { id = item.Id })" class="btn btn-info mt-2">Szczegóły</a>
+                                <button class="btn btn-primary addToCartButton mt-2" data-item-id="@item.Id">Dodaj do koszyka</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
-        }
+            <a href="@Url.Action("Index", "Cart")" class="btn btn-primary">Przejdź do koszyka</a>
+        </div>
     </div>
-    <a href="@Url.Action("Index", "Cart")" class="btn btn-primary">Przejdź do koszyka</a>
 </div>
 
 @section Scripts {
