@@ -19,7 +19,7 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: Item/Index
         public async Task<IActionResult> Index()
         {
@@ -44,13 +44,13 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: Item/Create
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Item item)
@@ -74,7 +74,7 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: Item/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -90,7 +90,7 @@ namespace PZ_Projekt.Controllers
             }
             return View(item);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Item item)
@@ -146,7 +146,7 @@ namespace PZ_Projekt.Controllers
 
 
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: Item/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -163,7 +163,7 @@ namespace PZ_Projekt.Controllers
 
             return View(item);
         }
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -176,7 +176,7 @@ namespace PZ_Projekt.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Administrator")]
         private bool ItemExists(int id)
         {
             return _context.Item.Any(e => e.Id == id);
