@@ -1,0 +1,24 @@
+﻿@model PZ_Projekt.Models.Order
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<h1>Order Confirmation</h1>
+
+<p>Thank you for your order!</p>
+
+<h3>Order Details</h3>
+<ul>
+    <li>Order Date: @Model.OrderDate</li>
+    <li>Delivery Method: @Model.DeliveryMethod</li>
+    <li>Address: @Model.Address</li>
+</ul>
+
+<h3>Items</h3>
+<ul>
+    @foreach (var item in Model.OrderItems)
+    {
+        <li>@item.Item.Name - @item.Quantity x @item.Item.Price.ToString("C") = @(item.Quantity * item.Item.Price).ToString("C")</li>
+    }
+</ul>
