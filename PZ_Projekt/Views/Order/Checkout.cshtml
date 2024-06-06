@@ -7,6 +7,8 @@
 <h1>Checkout</h1>
 
 <form asp-action="Checkout" method="post">
+    <input type="hidden" asp-for="Status" />
+
     <div class="form-group">
         <label asp-for="DeliveryMethod"></label>
         <select asp-for="DeliveryMethod" class="form-control">

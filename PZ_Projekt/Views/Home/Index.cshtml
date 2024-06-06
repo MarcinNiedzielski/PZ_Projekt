@@ -17,7 +17,24 @@
             <option value="price_asc">Cena (rosnąco)</option>
             <option value="price_desc">Cena (malejąco)</option>
         </select>
+        <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
         <button type="submit" class="btn btn-primary">Sortuj</button>
+    </form>
+
+    <!-- Formularz filtrowania kategorii -->
+    <form asp-action="Index" asp-controller="Home" method="get" class="form-inline mb-2">
+        <label class="mr-2">Filtruj po kategorii:</label>
+        <select id="categoryFilter" name="categoryFilter" class="form-control mr-2">
+            <option value="">Wszystkie</option>
+            <option value="GPU">GPU</option>
+            <option value="CPU">CPU</option>
+            <option value="RAM">RAM</option>
+            <option value="zasilacze">Zasilacze</option>
+            <option value="dysk">Dysk</option>
+            <option value="chłodzenie">Chłodzenie</option>
+        </select>
+        <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
+        <button type="submit" class="btn btn-primary">Filtruj</button>
     </form>
 
     <div class="row">
@@ -45,7 +62,7 @@
             $('.addToCartButton').click(function () {
                 var itemId = $(this).data('item-id');
                 $.post('@Url.Action("AddToCart", "Cart")', { id: itemId }, function (data) {
-                    
+
                 });
             });
         });
