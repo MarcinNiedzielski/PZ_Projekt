@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+@{
+    ViewData["Title"] = "Manage Roles";
+}
+
+<h1>Manage User Roles</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (await UserManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        <span class="badge badge-success" style="color:black;">Administrator</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-secondary" style="color:black;">User</span>
+                    }
+                </td>
+                <td>
+                    @if (await UserManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        <form asp-action="RemoveFromAdminRole" asp-controller="Admin">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-danger">Remove from Admin Role</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="AddToAdminRole" asp-controller="Admin">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-success">Add to Admin Role</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
