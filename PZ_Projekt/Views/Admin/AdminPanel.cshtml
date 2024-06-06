@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+<h1>Administrator Panel</h1>
+
+<div class="card-deck">
+    <!-- Wyświetlanie wszystkich zamówień -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">All Orders</h5>
+            <p class="card-text">View all orders placed by users.</p>
+            <a href="@Url.Action("AllOrders", "Order")" class="btn btn-primary">View Orders</a>
+        </div>
+    </div>
+
+    <!-- Zarządzanie użytkownikami -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Manage Users</h5>
+            <p class="card-text">Manage user roles and permissions.</p>
+            <a href="@Url.Action("ManageRoles", "Admin")" class="btn btn-primary">Manage Users</a>
+        </div>
+    </div>
+
+    <!-- Dodawanie produktów -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add Product</h5>
+            <p class="card-text">Add new products to the store.</p>
+            <a href="@Url.Action("Create", "Item")" class="btn btn-primary">Add Product</a>
+        </div>
+    </div>
+
+    <!-- Lista wszystkich produktów -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">All Products</h5>
+            <p class="card-text">View all products in the store.</p>
+            <a href="@Url.Action("Index", "Item")" class="btn btn-primary">View Products</a>
+        </div>
+    </div>
+</div>
