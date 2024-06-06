@@ -18,6 +18,7 @@ else
                 <th>Order Date</th>
                 <th>Delivery Method</th>
                 <th>Address</th>
+                <th>Status</th>
                 <th>Total</th>
                 <th>Details</th>
             </tr>
@@ -29,9 +30,8 @@ else
                     <td>@order.OrderDate</td>
                     <td>@order.DeliveryMethod</td>
                     <td>@order.Address</td>
-                    <td>
-                        @order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")
-                    </td>
+                    <td>@order.Status</td>
+                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")</td>
                     <td>
                         <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Details</a>
                     </td>

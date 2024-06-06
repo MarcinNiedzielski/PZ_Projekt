@@ -20,7 +20,8 @@ namespace PZ_Projekt.Models
         [Required]
         public string Address { get; set; } // Address for delivery
 
+        public string? Status { get; set; } // Status of the order
+
         public List<OrderItem> OrderItems { get; set; }
     }
 }
-

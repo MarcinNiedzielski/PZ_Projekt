@@ -40,16 +40,21 @@ namespace PZ_Projekt.Controllers
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                OrderItems = cart.CartItems.Select(ci => new OrderItem
+                DeliveryMethod = "Pickup", // Domyślna metoda dostawy
+                Address = "", // Puste pole adresu, do uzupełnienia przez użytkownika
+                Status = "Nowe", // Domyślny status
+                OrderItems = cart.CartItems != null ? cart.CartItems.Select(ci => new OrderItem
                 {
                     ItemId = ci.ItemId,
                     Item = ci.Item,
                     Quantity = ci.Quantity
-                }).ToList()
+                }).ToList() : new List<OrderItem>() // Zabezpieczenie przed null exception
             };
 
             return View(order);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Checkout(Order order, string deliveryMethod, string address)
@@ -89,6 +94,40 @@ namespace PZ_Projekt.Controllers
 
             return RedirectToAction("OrderConfirmation", new { orderId = order.Id });
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> ChangeOrderStatus(int id, string status)
+        {
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Tutaj umieść logikę walidacji statusu
+            if (!IsValidOrderStatus(status))
+            {
+                ModelState.AddModelError("", "Invalid order status.");
+                return RedirectToAction(nameof(AllOrders));
+            }
+
+            // Tutaj umieść logikę zmiany statusu zamówienia
+            order.Status = status;
+
+            await _context.SaveChangesAsync();
+
+            // Przekierowanie użytkownika na tę samą stronę
+            return RedirectToAction(nameof(AllOrders));
+        }
+
+        private bool IsValidOrderStatus(string status)
+        {
+            // Lista prawidłowych statusów zamówienia
+            var validStatuses = new List<string> { "Nowe", "W trakcie", "Gotowe do odbioru", "Gotowe do wysyłki", "Wysłane", "Zakończone" };
+            return validStatuses.Contains(status, StringComparer.OrdinalIgnoreCase);
+        }
+
 
         public async Task<IActionResult> OrderConfirmation(int orderId)
         {

@@ -16,36 +16,38 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string sortOrder, string categoryFilter)
         {
             ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["PriceSortParam"] = sortOrder == "price_asc" ? "price_desc" : "price_asc";
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.CategoryFilter = categoryFilter;
 
-            var items = _context.Item.AsQueryable();
+            IQueryable<Item> itemsQuery = _context.Item.AsQueryable();
+
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                itemsQuery = itemsQuery.Where(item => item.Category == categoryFilter);
+            }
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    items = items.OrderByDescending(i => i.Name);
+                    itemsQuery = itemsQuery.OrderByDescending(i => i.Name);
                     break;
                 case "price_asc":
-                    items = items.OrderBy(i => i.Price);
+                    itemsQuery = itemsQuery.OrderBy(i => i.Price);
                     break;
                 case "price_desc":
-                    items = items.OrderByDescending(i => i.Price);
+                    itemsQuery = itemsQuery.OrderByDescending(i => i.Price);
                     break;
                 default:
-                    items = items.OrderBy(i => i.Name);
+                    itemsQuery = itemsQuery.OrderBy(i => i.Name);
                     break;
             }
 
-            return View(items.ToList());
-        }
-
-
-        public IActionResult Privacy()
-        {
-            return View();
+            var items = itemsQuery.ToList();
+            return View(items);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

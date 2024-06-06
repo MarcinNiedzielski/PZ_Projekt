@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "All Orders";
+    bool isAdmin = User.IsInRole("Administrator");
 }
 
 <h1>All Orders</h1>
@@ -18,7 +19,9 @@ else
                 <th>Order Date</th>
                 <th>Delivery Method</th>
                 <th>Address</th>
+                <th>Status</th>
                 <th>Total</th>
+                <th>User</th> <!-- Dodajemy nagłówek kolumny dla użytkownika -->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -29,11 +32,29 @@ else
                     <td>@order.OrderDate</td>
                     <td>@order.DeliveryMethod</td>
                     <td>@order.Address</td>
-                    <td>
-                        @order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")
-                    </td>
+                    <td>@order.Status</td>
+                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")</td>
+                    <td>@order.UserId</td> <!-- Wyświetlamy UserId -->
                     <td>
                         <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Details</a>
+                        @if (isAdmin)
+                        {
+                            <form asp-action="ChangeOrderStatus" asp-controller="Order" method="post">
+                                <input type="hidden" name="id" value="@order.Id" />
+                                <div class="form-group">
+                                    <label for="status">New Status:</label>
+                                    <select id="status" name="status" class="form-control">
+                                        <option value="Nowe">Nowe</option>
+                                        <option value="W trakcie">W trakcie</option>
+                                        <option value="Gotowe do odbioru">Gotowe do odbioru</option>
+                                        <option value="Gotowe do wysyłki">Gotowe do wysyłki</option>
+                                        <option value="Wysłane">Wysłane</option>
+                                        <option value="Zakończone">Zakończone</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Status</button>
+                            </form>
+                        }
                         <form asp-controller="Order" asp-action="RemoveOrder" method="post">
                             <input type="hidden" name="id" value="@order.Id" />
                             <button type="submit" class="btn btn-danger">Remove</button>
