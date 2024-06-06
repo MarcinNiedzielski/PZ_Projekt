@@ -1,0 +1,10 @@
+﻿@model PZ_Projekt.Models.Order
+
+<h1>Confirm Remove Order</h1>
+
+<p>Are you sure you want to delete the order with ID: @Model.Id?</p>
+
+<form asp-action="ConfirmRemoveOrder" asp-route-id="@Model.Id" method="post">
+    <input type="submit" value="Confirm" class="btn btn-danger" />
+    <a asp-action="AllOrders" class="btn btn-secondary">Cancel</a>
+</form>

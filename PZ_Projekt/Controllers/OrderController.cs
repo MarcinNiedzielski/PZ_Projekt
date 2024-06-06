@@ -1,5 +1,5 @@
-﻿// Controllers/OrderController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
@@ -15,10 +15,12 @@ namespace PZ_Projekt.Controllers
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Checkout()
@@ -63,6 +65,12 @@ namespace PZ_Projekt.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            if (string.IsNullOrEmpty(deliveryMethod) || string.IsNullOrEmpty(address))
+            {
+                ModelState.AddModelError("", "Delivery method and address are required.");
+                return View(order);
+            }
+
             order.UserId = userId;
             order.OrderDate = DateTime.Now;
             order.DeliveryMethod = deliveryMethod;
@@ -95,6 +103,67 @@ namespace PZ_Projekt.Controllers
             }
 
             return View(order);
+        }
+
+        public async Task<IActionResult> MyOrders()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var orders = await _context.Order
+                .Where(o => o.UserId == userId)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Item)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> AllOrders()
+        {
+            var orders = await _context.Order
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Item)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+
+        // Metoda do usuwania zamówienia
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> RemoveOrder(int id)
+        {
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View("ConfirmRemoveOrder", order);
+        }
+
+        // Potwierdzenie usuwania zamówienia
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> ConfirmRemoveOrder(int id)
+        {
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            _context.Order.Remove(order);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AllOrders));
+        }
+
+
+        private bool OrderExists(int id)
+        {
+            return _context.Order.Any(e => e.Id == id);
         }
     }
 }

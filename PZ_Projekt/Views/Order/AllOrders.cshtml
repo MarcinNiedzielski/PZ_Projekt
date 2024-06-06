@@ -1,0 +1,46 @@
+﻿@model IEnumerable<PZ_Projekt.Models.Order>
+
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<h1>All Orders</h1>
+
+@if (!Model.Any())
+{
+    <p>No orders available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Delivery Method</th>
+                <th>Address</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderDate</td>
+                    <td>@order.DeliveryMethod</td>
+                    <td>@order.Address</td>
+                    <td>
+                        @order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")
+                    </td>
+                    <td>
+                        <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Details</a>
+                        <form asp-controller="Order" asp-action="RemoveOrder" method="post">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
