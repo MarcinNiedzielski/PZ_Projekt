@@ -1,5 +1,4 @@
-﻿// Controllers/CartController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
@@ -57,7 +56,7 @@ namespace PZ_Projekt.Controllers
             }
             else
             {
-                cart.CartItems.Add(new CartItem { Item = item, Quantity = 1 });
+                cart.CartItems.Add(new CartItem { Item = item, ItemId = id, UserId = userId, Quantity = 1 });
             }
 
             await _context.SaveChangesAsync();

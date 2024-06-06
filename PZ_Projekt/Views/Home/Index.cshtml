@@ -11,7 +11,7 @@
     <!-- Formularz filtrowania -->
     <form asp-action="Index" asp-controller="Home" method="get" class="form-inline mb-2">
         <label class="mr-2">Sortuj według:</label>
-        <select name="sortOrder" class="form-control mr-2">
+        <select id="sortOrder" name="sortOrder" class="form-control mr-2">
             <option value="">Domyślnie</option>
             <option value="name_desc">Nazwa (Z-A)</option>
             <option value="price_asc">Cena (rosnąco)</option>
@@ -30,7 +30,7 @@
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">@item.Price.ToString("C")</p>
                         <a href="@Url.Action("Details", "Item", new { id = item.Id })" class="btn btn-info mt-2">Szczegóły</a>
-                        <a href="@Url.Action("AddToCart", "Cart", new { id = item.Id })" class="btn btn-primary">Dodaj do koszyka</a>
+                        <button class="btn btn-primary addToCartButton" data-item-id="@item.Id">Dodaj do koszyka</button>
                     </div>
                 </div>
             </div>
@@ -40,3 +40,16 @@
     <a href="@Url.Action("Index", "Cart")" class="btn btn-primary">Przejdź do koszyka</a>
     <a href="@Url.Action("Index", "Orders")" class="btn btn-primary">Przejdź do zamówień</a>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.addToCartButton').click(function () {
+                var itemId = $(this).data('item-id');
+                $.post('@Url.Action("AddToCart", "Cart")', { id: itemId }, function (data) {
+                    
+                });
+            });
+        });
+    </script>
+}

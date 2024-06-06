@@ -1,18 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PZ_Projekt.Models
 {
-    public class CartItem
+    public class Cart
     {
         public int Id { get; set; }
-        public int CartId { get; set; }
-        public Cart Cart { get; set; }
-
-        public int ItemId { get; set; }
-        public Item Item { get; set; }
-
-        [Required]
-        public int Quantity { get; set; }
+        public string UserId { get; set; }
+        public List<CartItem> CartItems { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// Controllers/OrderController.cs
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
@@ -23,12 +24,12 @@ namespace PZ_Projekt.Controllers
         public async Task<IActionResult> Checkout()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var cartItems = await _context.CartItem
-                .Include(ci => ci.Item)
-                .Where(ci => ci.UserId == userId)
-                .ToListAsync();
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Item)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (!cartItems.Any())
+            if (cart == null || !cart.CartItems.Any())
             {
                 return RedirectToAction("Index", "Cart");
             }
@@ -37,7 +38,7 @@ namespace PZ_Projekt.Controllers
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                OrderItems = cartItems.Select(ci => new OrderItem
+                OrderItems = cart.CartItems.Select(ci => new OrderItem
                 {
                     ItemId = ci.ItemId,
                     Item = ci.Item,
@@ -49,29 +50,32 @@ namespace PZ_Projekt.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout(Order order)
+        public async Task<IActionResult> Checkout(Order order, string deliveryMethod, string address)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var cartItems = await _context.CartItem
-                .Where(ci => ci.UserId == userId)
-                .ToListAsync();
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (!cartItems.Any())
+            if (cart == null || !cart.CartItems.Any())
             {
                 return RedirectToAction("Index", "Cart");
             }
 
             order.UserId = userId;
             order.OrderDate = DateTime.Now;
-            order.OrderItems = cartItems.Select(ci => new OrderItem
+            order.DeliveryMethod = deliveryMethod;
+            order.Address = address;
+            order.OrderItems = cart.CartItems.Select(ci => new OrderItem
             {
                 ItemId = ci.ItemId,
                 Quantity = ci.Quantity
             }).ToList();
 
             _context.Order.Add(order);
-            _context.CartItem.RemoveRange(cartItems);
+            _context.CartItem.RemoveRange(cart.CartItems);
+            _context.Cart.Remove(cart);
 
             await _context.SaveChangesAsync();
 

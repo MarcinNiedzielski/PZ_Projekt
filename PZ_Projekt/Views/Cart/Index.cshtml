@@ -1,5 +1,4 @@
-﻿
-@model List<PZ_Projekt.Models.CartItem>
+﻿@model List<PZ_Projekt.Models.CartItem>
 
 @{
     ViewData["Title"] = "Koszyk";
@@ -38,6 +37,6 @@
                 }
             </tbody>
         </table>
-        <a href="#" class="btn btn-primary">Przejdź do kasy</a>
+        <a href="@Url.Action("Checkout", "Order")" class="btn btn-primary">Przejdź do kasy</a>
     }
 </div>
