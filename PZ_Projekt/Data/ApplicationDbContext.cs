@@ -11,7 +11,6 @@ namespace PZ_Projekt.Data
         {
         }
 
-        public DbSet<PZ_Projekt.Models.Product> Product { get; set; } = default!;
         public DbSet<PZ_Projekt.Models.Item> Item { get; set; } = default!;
         public DbSet<PZ_Projekt.Models.Cart> Cart { get; set; }
         public DbSet<PZ_Projekt.Models.CartItem> CartItem { get; set; }
