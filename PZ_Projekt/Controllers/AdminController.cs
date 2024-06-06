@@ -17,6 +17,12 @@ namespace PZ_Projekt.Controllers
             _userManager = userManager;
         }
 
+        // GET: /Admin/AdminPanel
+        public IActionResult AdminPanel()
+        {
+            return View();
+        }
+
         // GET: /Admin/ManageRoles
         public async Task<IActionResult> ManageRoles()
         {
