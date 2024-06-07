@@ -18,6 +18,7 @@ namespace PZ_Projekt.Models
         public string DeliveryMethod { get; set; } // "Pickup" or "Courier"
 
         [Required(ErrorMessage = "Adres dostawy jest wymagany.")]
+        [StringLength(100)]
         public string Address { get; set; } // Address for delivery
 
         public string? Status { get; set; } // Status of the order
