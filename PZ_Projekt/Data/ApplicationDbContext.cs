@@ -11,7 +11,7 @@ namespace PZ_Projekt.Data
             : base(options)
         {
         }
-
+        // Tabele bazy danych
         public DbSet<PZ_Projekt.Models.Item> Item { get; set; } = default!;
         public DbSet<PZ_Projekt.Models.Cart> Cart { get; set; }
         public DbSet<PZ_Projekt.Models.CartItem> CartItem { get; set; }
@@ -19,12 +19,13 @@ namespace PZ_Projekt.Data
         public DbSet<PZ_Projekt.Models.OrderItem> OrderItem { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder) // dodawanie danych początkowych do bazy danych
         {
             base.OnModelCreating(modelBuilder);
+            // Konfiguracja klucza głównego dla tabeli IdentityUserLogin
             modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(p => new { p.LoginProvider, p.ProviderKey });
 
-
+            // Dodanie użytkowników początkowych do bazy danych 
             modelBuilder.Entity<IdentityUser>().HasData(
         new IdentityUser
         {
@@ -86,7 +87,7 @@ namespace PZ_Projekt.Data
               }
               );
 
-
+            // Dodanie prodruktów początkowych do bazy danych 
             modelBuilder.Entity<Item>().HasData(
                 new Item
                 {
@@ -124,7 +125,6 @@ namespace PZ_Projekt.Data
                     Price = 1300M,
                     ImageUrl = "/uploads/1119750d-42b6-4f4b-9a43-c70b6a780eb4.jpg"
                 },
-                // Dodaj resztę produktów tutaj
                 new Item
                 {
                     Id = 4,

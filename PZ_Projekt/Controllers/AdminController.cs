@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.Linq;
 
 namespace PZ_Projekt.Controllers
-{
+{// Kontroler obsługuje widoki w folderze Admin (panel aministratora i zarządzanie rolami uzytkowników)
+    // autoryzacja użytkownika - wymagana rola "Administrator" do całego kontrolera
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
@@ -18,12 +19,13 @@ namespace PZ_Projekt.Controllers
             _userManager = userManager;
         }
 
+        // Wyświetlanie panelu admina
         // GET: /Admin/AdminPanel
         public IActionResult AdminPanel()
         {
             return View();
         }
-
+        // Pobieranie listy wszytskich użytkowników bez aktualnie zalogowanego admina (żeby zapobiec usunięciu jedynego admina)
         // GET: /Admin/ManageRoles
         public async Task<IActionResult> ManageRoles()
         {
@@ -34,7 +36,7 @@ namespace PZ_Projekt.Controllers
 
             return View(users);
         }
-
+        // Dodawanie uprawnień Administratora
         // POST: /Admin/AddToAdminRole
         [HttpPost]
         public async Task<IActionResult> AddToAdminRole(string userId)
@@ -47,7 +49,7 @@ namespace PZ_Projekt.Controllers
             }
             return NotFound();
         }
-
+        // Usuwanie uprawnień Administratora
         // POST: /Admin/RemoveFromAdminRole
         [HttpPost]
         public async Task<IActionResult> RemoveFromAdminRole(string userId)

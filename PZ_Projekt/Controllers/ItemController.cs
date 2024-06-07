@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace PZ_Projekt.Controllers
-{
+{// Kontroler obsługuje widoki w folderze Item (operacja CRUD produktów, oraz lista wszystkich produktów)
     public class ItemController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +20,8 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Widok wszystkich produktów
         [Authorize(Roles = "Administrator")]
         // GET: Item/Index
         public async Task<IActionResult> Index()
@@ -28,6 +30,7 @@ namespace PZ_Projekt.Controllers
             return View(items);
         }
 
+        // Szczegóły danego produktu
         // GET: Item/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,12 +48,17 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Wyświetlanie dodawania produktów 
         [Authorize(Roles = "Administrator")]
         // GET: Item/Create
         public IActionResult Create()
         {
             return View();
         }
+
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Akcja dodająca produkt
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -75,6 +83,8 @@ namespace PZ_Projekt.Controllers
             return View(item);
         }
 
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Wyświetlanie edycji produktu
         [Authorize(Roles = "Administrator")]
         // GET: Item/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -91,6 +101,9 @@ namespace PZ_Projekt.Controllers
             }
             return View(item);
         }
+
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Akcja edytująca produkt
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -105,10 +118,10 @@ namespace PZ_Projekt.Controllers
             {
                 try
                 {
-                    // Unikaj śledzenia istniejącej encji
+                    // Unikanie śledzenia istniejącej encji
                     _context.Entry(item).State = EntityState.Modified;
 
-                    // Sprawdzanie, czy nowy obrazek został przesłany
+                    // Sprawdzanie, czy nowy obraz został przesłany
                     if (item.ImageFile == null)
                     {
                         // Jeśli nie przesłano nowego obrazka, zachowaj istniejącą wartość ImageUrl
@@ -146,7 +159,8 @@ namespace PZ_Projekt.Controllers
         }
 
 
-
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Wyświetlanie usuwania produktu
         [Authorize(Roles = "Administrator")]
         // GET: Item/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -164,6 +178,9 @@ namespace PZ_Projekt.Controllers
 
             return View(item);
         }
+
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Usuwanie produktu
         [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -177,12 +194,15 @@ namespace PZ_Projekt.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        // autoryzacja użytkownika - wymagana rola "Administrator"
+        // Sprawdzanie czy przedmiot istnieje
         [Authorize(Roles = "Administrator")]
         private bool ItemExists(int id)
         {
             return _context.Item.Any(e => e.Id == id);
         }
-
+        // Walidacja dla rozszerzeń plików (do przesyłania obrazów)
         public class AllowedExtensionsAttribute : ValidationAttribute
         {
             private readonly string[] _extensions;

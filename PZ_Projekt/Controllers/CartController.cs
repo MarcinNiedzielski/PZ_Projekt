@@ -8,7 +8,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PZ_Projekt.Controllers
-{
+{// Kontroler obsługuje widoki w folderze Cart (dodawanie do koszyka, wyświetlanie koszyka)
+    // autoryzacja użytkownika - wymagany zalogowany uzytkownik dla całego kontrolera
     [Authorize]
     public class CartController : Controller
     {
@@ -19,6 +20,7 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
+        // Wyświetlanie koszyka
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -29,7 +31,7 @@ namespace PZ_Projekt.Controllers
 
             return View(cart?.CartItems ?? new List<CartItem>());
         }
-
+        // Dodawanie produktu do koszyka
         public async Task<IActionResult> AddToCart(int id)
         {
             var item = await _context.Item.FindAsync(id);
@@ -64,6 +66,7 @@ namespace PZ_Projekt.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // Usuwanie z koszyka
         public async Task<IActionResult> RemoveFromCart(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

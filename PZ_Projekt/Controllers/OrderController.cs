@@ -10,7 +10,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PZ_Projekt.Controllers
-{
+{// Kontroler obsługuje widoki w folderze Oder (wyświetlanie i usuwanie zamówień, zmiana statusu)
+ // autoryzacja użytkownika - wymagany zalogowany uzytkownik dla całego kontrolera
     [Authorize]
     public class OrderController : Controller
     {
@@ -23,6 +24,7 @@ namespace PZ_Projekt.Controllers
             _userManager = userManager;
         }
 
+        // Wyświetlanie podsumowania zamówienia 
         public async Task<IActionResult> Checkout()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -55,7 +57,7 @@ namespace PZ_Projekt.Controllers
         }
 
 
-
+        // Składanie zamówienia 
         [HttpPost]
         public async Task<IActionResult> Checkout(Order order, string deliveryMethod, string address)
         {
@@ -120,7 +122,7 @@ namespace PZ_Projekt.Controllers
             return RedirectToAction("OrderConfirmation", new { orderId = order.Id });
         }
 
-
+        // Zmiana statusu zamówienia - tylko dla Administratora
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> ChangeOrderStatus(int id, string status)
@@ -131,14 +133,14 @@ namespace PZ_Projekt.Controllers
                 return NotFound();
             }
 
-            // Tutaj umieść logikę walidacji statusu
+            
             if (!IsValidOrderStatus(status))
             {
                 ModelState.AddModelError("", "Invalid order status.");
                 return RedirectToAction(nameof(AllOrders));
             }
 
-            // Tutaj umieść logikę zmiany statusu zamówienia
+            
             order.Status = status;
 
             await _context.SaveChangesAsync();
@@ -154,7 +156,7 @@ namespace PZ_Projekt.Controllers
             return validStatuses.Contains(status, StringComparer.OrdinalIgnoreCase);
         }
 
-
+        //Wyświetlanie potwierdzenia zamówienia
         public async Task<IActionResult> OrderConfirmation(int orderId)
         {
             var order = await _context.Order
@@ -169,7 +171,7 @@ namespace PZ_Projekt.Controllers
 
             return View(order);
         }
-
+        //Wyświetlanie listy zamówień zalogowanego użytkownika
         public async Task<IActionResult> MyOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -182,6 +184,7 @@ namespace PZ_Projekt.Controllers
             return View(orders);
         }
 
+        //Wyświetlanie listy wszystkich zamówień
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> AllOrders()
         {
@@ -198,7 +201,7 @@ namespace PZ_Projekt.Controllers
 
             return View(orders);
         }
-
+        // Metoda pobierająca mapowanie ID użytkownika na nazwę użytkownika ( wyświetlanie nazwy użytkownika zamiast ID)
         private async Task<Dictionary<string, string>> GetUserIdToNameMap()
         {
             // Pobierz wszystkich użytkowników z bazy danych
@@ -211,7 +214,7 @@ namespace PZ_Projekt.Controllers
         }
 
 
-        // Metoda do usuwania zamówienia
+        // Usuwanie zamówienia
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> RemoveOrder(int id)
@@ -242,7 +245,7 @@ namespace PZ_Projekt.Controllers
             return RedirectToAction(nameof(AllOrders));
         }
 
-
+        // Sprawdzanie czy zamówienie istnieje
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.Id == id);
