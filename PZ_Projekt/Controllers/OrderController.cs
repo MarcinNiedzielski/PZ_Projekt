@@ -164,7 +164,24 @@ namespace PZ_Projekt.Controllers
                 .ThenInclude(oi => oi.Item)
                 .ToListAsync();
 
+            // Pobierz słownik par Id użytkownika - Nazwa użytkownika
+            var userIdToNameMap = await GetUserIdToNameMap();
+
+            // Przekazuj słownik do widoku wraz z zamówieniami
+            ViewData["UserIdToNameMap"] = userIdToNameMap;
+
             return View(orders);
+        }
+
+        private async Task<Dictionary<string, string>> GetUserIdToNameMap()
+        {
+            // Pobierz wszystkich użytkowników z bazy danych
+            var users = await _userManager.Users.ToListAsync();
+
+            // Utwórz słownik Id użytkownika - Nazwa użytkownika
+            var userIdToNameMap = users.ToDictionary(u => u.Id, u => u.UserName);
+
+            return userIdToNameMap;
         }
 
 

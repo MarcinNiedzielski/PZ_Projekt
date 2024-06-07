@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Wszystkie Zamówienia";
     bool isAdmin = User.IsInRole("Administrator");
+    // Pobierz słownik UserId - UserName z widoku
+    var userIdToNameMap = ViewData["UserIdToNameMap"] as Dictionary<string, string>;
 }
-
 <h1>Wszystkie Zamówienia</h1>
 
 @if (!Model.Any())
@@ -34,7 +35,7 @@ else
                     <td>@order.Address</td>
                     <td>@order.Status</td>
                     <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price) zł</td> <!-- Dodaliśmy zł na końcu -->
-                    <td>@order.UserId</td> <!-- Wyświetlamy UserId -->
+                    <td>@userIdToNameMap[order.UserId]</td>
                     <td>
                         <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Szczegóły</a>
                         @if (isAdmin)
