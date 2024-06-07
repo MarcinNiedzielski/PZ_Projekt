@@ -8,10 +8,12 @@
     <h1 class="display-4">Twój koszyk</h1>
     @if (!Model.Any())
     {
+        <!-- Komunikat o pustym koszyku, jeśli brak pozycji -->
         <p>Twój koszyk jest pusty.</p>
     }
     else
     {
+        <!-- Tabela zawierająca szczegóły pozycji w koszyku -->
         <table class="table">
             <thead>
                 <tr>
@@ -23,23 +25,27 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- Pętla wyświetlająca szczegóły każdej pozycji w koszyku -->
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Item.Name</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.Item.Price.ToString("C")</td>
-                        <td>@((item.Quantity * item.Item.Price).ToString("C"))</td>
+                        <td>@item.Item.Name</td> <!-- Nazwa produktu -->
+                        <td>@item.Quantity</td> <!-- Ilość produktu -->
+                        <td>@item.Item.Price.ToString("C")</td> <!-- Cena jednostkowa -->
+                        <td>@((item.Quantity * item.Item.Price).ToString("C"))</td> <!-- Całkowita cena dla danej ilości -->
                         <td>
+                            <!-- Przycisk usuwania pozycji z koszyka -->
                             <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.Item.Id })" class="btn btn-danger">Usuń</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+        <!-- Wyświetlanie sumy całkowitej koszyka -->
         <div>
             <h4>Suma: @Model.Sum(item => item.Quantity * item.Item.Price).ToString("C")</h4>
         </div>
+        <!-- Przycisk przenoszący do procesu realizacji zamówienia -->
         <a href="@Url.Action("Checkout", "Order")" class="btn btn-primary">Przejdź do kasy</a>
     }
 </div>

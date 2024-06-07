@@ -1,29 +1,33 @@
 ﻿@model PZ_Projekt.Models.Order
 
 @{
-    ViewData["Title"] = "Składanie zamówienia";
+    ViewData["Title"] = "Składanie zamówienia"; // Ustawia tytuł strony na "Składanie zamówienia"
 }
 
 <h1>Podsumowanie zamówienia</h1>
 
+<!-- Formularz do składania zamówienia -->
 <form asp-action="Checkout" method="post">
+    <!-- Ukryte pole do przesyłania statusu zamówienia -->
     <input type="hidden" asp-for="Status" />
 
+    <!-- Pole wyboru metody dostawy -->
     <div class="form-group">
-        <label asp-for="DeliveryMethod">Metoda dostawy:</label>
+        <label asp-for="DeliveryMethod">Metoda dostawy:</label> <!-- Etykieta dla pola metody dostawy -->
         <select asp-for="DeliveryMethod" class="form-control">
             <option value="Odbiór w sklepie">Odbiór w sklepie</option>
             <option value="Kurier za pobraniem">Kurier za pobraniem</option>
         </select>
-        <span asp-validation-for="DeliveryMethod" class="text-danger"></span>
+        <span asp-validation-for="DeliveryMethod" class="text-danger"></span> <!-- Wyświetla błąd walidacji dla metody dostawy -->
     </div>
 
+    <!-- Pole tekstowe dla adresu dostawy -->
     <div class="form-group">
-        <label asp-for="Address">Adres dostawy:</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
+        <label asp-for="Address">Adres dostawy:</label> 
+        <input asp-for="Address" class="form-control" placeholder="Maksymalna liczba znaków: 100" />
+        <span asp-validation-for="Address" class="text-danger"></span> 
     </div>
 
-
+    <!-- Przycisk do złożenia zamówienia -->
     <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
 </form>

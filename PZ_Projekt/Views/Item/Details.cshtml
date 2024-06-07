@@ -1,8 +1,8 @@
 ﻿@model PZ_Projekt.Models.Item
 
 @{
-    ViewData["Title"] = "Szczegóły";
-    bool isAdmin = User.IsInRole("Administrator");
+    ViewData["Title"] = "Szczegóły"; // Ustawia tytuł strony
+    bool isAdmin = User.IsInRole("Administrator"); // Sprawdza, czy zalogowany użytkownik ma rolę Administratora
 }
 
 <h1>Szczegóły</h1>
@@ -11,30 +11,35 @@
     <h4>Szczegóły produktu</h4>
     <hr />
     <dl class="row">
+        <!-- Wyświetlanie nazwy produktu -->
         <dt class="col-sm-2">
             <strong>Nazwa:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+        <!-- Wyświetlanie opisu produktu -->
         <dt class="col-sm-2">
             <strong>Opis:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
+        <!-- Wyświetlanie ceny produktu -->
         <dt class="col-sm-2">
             <strong>Cena:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
+        <!-- Wyświetlanie kategorii produktu -->
         <dt class="col-sm-2">
             <strong>Kategoria:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Category)
         </dd>
+        <!-- Wyświetlanie obrazu produktu -->
         <dt class="col-sm-2">
             <strong>Zdjęcie:</strong>
         </dt>
@@ -44,10 +49,12 @@
     </dl>
 </div>
 
-<!-- Dodaj do koszyka -->
+<!-- Formularz dodawania produktu do koszyka -->
 <div>
     <form asp-action="AddToCart" asp-controller="Cart" method="post">
+        <!-- Ukryte pole z Id produktu -->
         <input type="hidden" name="id" value="@Model.Id" />
+        <!-- Przycisk dodawania do koszyka -->
         <button type="submit" class="btn btn-primary">Dodaj do koszyka</button>
     </form>
 </div>
@@ -55,7 +62,9 @@
 @if (isAdmin)
 {
     <div>
+        <!-- Link do edycji produktu widoczny tylko dla Administratora -->
         <a asp-action="Edit" asp-route-id="@Model?.Id">Edytuj</a> |
+        <!-- Link powrotu do listy produktów -->
         <a asp-action="Index">Powrót do Listy</a>
     </div>
 }

@@ -1,19 +1,22 @@
 ﻿@model IEnumerable<PZ_Projekt.Models.Order>
 
 @{
-    ViewData["Title"] = "Wszystkie Zamówienia";
-    bool isAdmin = User.IsInRole("Administrator");
-    // Pobierz słownik UserId - UserName z widoku
+    ViewData["Title"] = "Wszystkie Zamówienia"; // Ustawia tytuł strony na "Wszystkie Zamówienia"
+    bool isAdmin = User.IsInRole("Administrator"); // Sprawdza, czy użytkownik jest administratorem
+                                                   // Pobiera słownik UserId - UserName z ViewData
     var userIdToNameMap = ViewData["UserIdToNameMap"] as Dictionary<string, string>;
 }
+
 <h1>Wszystkie Zamówienia</h1>
 
+<!-- Sprawdza, czy nie ma dostępnych zamówień -->
 @if (!Model.Any())
 {
-    <p>Brak dostępnych zamówień.</p>
+    <p>Brak dostępnych zamówień.</p> <!-- Wyświetla wiadomość, jeśli brak zamówień -->
 }
 else
 {
+    <!-- Tabela wyświetlająca listę zamówień -->
     <table class="table">
         <thead>
             <tr>
@@ -22,28 +25,31 @@ else
                 <th>Adres</th>
                 <th>Status</th>
                 <th>Suma</th>
-                <th>Użytkownik</th> <!-- Dodaliśmy nagłówek kolumny dla użytkownika -->
+                <th>Użytkownik</th> <!-- Kolumna dla nazwy użytkownika -->
                 <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
+            <!-- Iteracja przez kolekcję zamówień -->
             @foreach (var order in Model)
             {
                 <tr>
-                    <td>@order.OrderDate</td>
-                    <td>@order.DeliveryMethod</td>
-                    <td>@order.Address</td>
-                    <td>@order.Status</td>
-                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price) zł</td> <!-- Dodaliśmy zł na końcu -->
-                    <td>@userIdToNameMap[order.UserId]</td>
+                    <td>@order.OrderDate</td> <!-- Wyświetla datę zamówienia -->
+                    <td>@order.DeliveryMethod</td> <!-- Wyświetla metodę dostawy -->
+                    <td>@order.Address</td> <!-- Wyświetla adres -->
+                    <td>@order.Status</td> <!-- Wyświetla status zamówienia -->
+                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price) zł</td> <!-- Wyświetla sumę zamówienia i dodaje "zł" na końcu -->
+                    <td>@userIdToNameMap[order.UserId]</td> <!-- Wyświetla nazwę użytkownika na podstawie słownika -->
                     <td>
+                        <!-- Link do szczegółów zamówienia -->
                         <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Szczegóły</a>
                         @if (isAdmin)
                         {
+                            <!-- Formularz do zmiany statusu zamówienia -->
                             <form asp-action="ChangeOrderStatus" asp-controller="Order" method="post">
                                 <input type="hidden" name="id" value="@order.Id" />
                                 <div class="form-group">
-                                    <label for="status">Nowy status:</label>
+                                    <label for="status">Nowy status:</label> <!-- Etykieta dla pola wyboru nowego statusu -->
                                     <select id="status" name="status" class="form-control">
                                         <option value="Nowe">Nowe</option>
                                         <option value="W trakcie">W trakcie</option>
@@ -53,12 +59,13 @@ else
                                         <option value="Zakończone">Zakończone</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Zmień status</button>
+                                <button type="submit" class="btn btn-primary">Zmień status</button> <!-- Przycisk do zmiany statusu -->
                             </form>
                         }
+                        <!-- Formularz do usunięcia zamówienia -->
                         <form asp-controller="Order" asp-action="RemoveOrder" method="post">
                             <input type="hidden" name="id" value="@order.Id" />
-                            <button type="submit" class="btn btn-danger">Usuń</button>
+                            <button type="submit" class="btn btn-danger">Usuń</button> <!-- Przycisk do usunięcia zamówienia -->
                         </form>
                     </td>
                 </tr>

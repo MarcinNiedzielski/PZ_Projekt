@@ -2,9 +2,13 @@
 
 <h1>Potwierdź usunięcie zamówienia</h1>
 
+<!-- Wyświetla komunikat potwierdzający usunięcie zamówienia -->
 <p>Czy na pewno chcesz usunąć zamówienie o identyfikatorze: @Model.Id?</p>
 
+<!-- Formularz do potwierdzenia usunięcia zamówienia -->
 <form asp-action="ConfirmRemoveOrder" asp-route-id="@Model.Id" method="post">
+    <!-- Przycisk potwierdzający usunięcie zamówienia -->
     <input type="submit" value="Potwierdź" class="btn btn-danger" />
+    <!-- Przycisk anulowania operacji i powrotu do listy zamówień -->
     <a asp-action="AllOrders" class="btn btn-secondary">Anuluj</a>
 </form>

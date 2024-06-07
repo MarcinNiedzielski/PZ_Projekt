@@ -22,21 +22,24 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
+                <td>@user.UserName</td> <!-- Wyświetla nazwę użytkownika -->
+                <td>@user.Email</td> <!-- Wyświetla adres e-mail użytkownika -->
                 <td>
                     @if (await UserManager.IsInRoleAsync(user, "Administrator"))
                     {
+                        <!-- Jeśli użytkownik jest administratorem, wyświetla badge "Administrator" -->
                         <span class="badge badge-success" style="color:black;">Administrator</span>
                     }
                     else
                     {
+                        <!-- Jeśli użytkownik nie jest administratorem, wyświetla badge "Użytkownik" -->
                         <span class="badge badge-secondary" style="color:black;">Użytkownik</span>
                     }
                 </td>
                 <td>
                     @if (await UserManager.IsInRoleAsync(user, "Administrator"))
                     {
+                        <!-- Formularz do usunięcia użytkownika z roli administratora -->
                         <form asp-action="RemoveFromAdminRole" asp-controller="Admin">
                             <input type="hidden" name="userId" value="@user.Id" />
                             <button type="submit" class="btn btn-danger">Usuń z Roli Administratora</button>
@@ -44,6 +47,7 @@
                     }
                     else
                     {
+                        <!-- Formularz do dodania użytkownika do roli administratora -->
                         <form asp-action="AddToAdminRole" asp-controller="Admin">
                             <input type="hidden" name="userId" value="@user.Id" />
                             <button type="submit" class="btn btn-success">Dodaj do Roli Administratora</button>
