@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
+using System.Linq;
 
 namespace PZ_Projekt.Controllers
 {
@@ -18,7 +19,6 @@ namespace PZ_Projekt.Controllers
 
         public IActionResult Index()
         {
-
             var latestItems = _context.Item
                 .OrderByDescending(i => i.Id)
                 .Take(6)
@@ -27,18 +27,24 @@ namespace PZ_Projekt.Controllers
             return View(latestItems);
         }
 
-        public IActionResult Products(string sortOrder, string categoryFilter)
+        public IActionResult Products(string sortOrder, string categoryFilter, string searchString)
         {
             ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["PriceSortParam"] = sortOrder == "price_asc" ? "price_desc" : "price_asc";
             ViewBag.SortOrder = sortOrder;
             ViewBag.CategoryFilter = categoryFilter;
+            ViewBag.SearchString = searchString;
 
             IQueryable<Item> itemsQuery = _context.Item.AsQueryable();
 
             if (!string.IsNullOrEmpty(categoryFilter))
             {
                 itemsQuery = itemsQuery.Where(item => item.Category == categoryFilter);
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                itemsQuery = itemsQuery.Where(item => item.Name.Contains(searchString));
             }
 
             switch (sortOrder)
