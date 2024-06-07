@@ -40,17 +40,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession(); // Dodaj sesje
 
-// Inicjalizacja roli administratora
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var adminRoleExists = await roleManager.RoleExistsAsync("Administrator");
-    if (!adminRoleExists)
-    {
-        await roleManager.CreateAsync(new IdentityRole("Administrator"));
-    }
-}
 
 app.MapControllerRoute(
     name: "default",
