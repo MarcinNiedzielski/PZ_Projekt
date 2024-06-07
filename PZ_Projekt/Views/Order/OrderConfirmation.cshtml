@@ -1,24 +1,24 @@
 ﻿@model PZ_Projekt.Models.Order
 
 @{
-    ViewData["Title"] = "Order Confirmation";
+    ViewData["Title"] = "Potwierdzenie Zamówienia";
 }
 
-<h1>Order Confirmation</h1>
+<h1>Potwierdzenie Zamówienia</h1>
 
-<p>Thank you for your order!</p>
+<p>Dziękujemy za złożenie zamówienia!</p>
 
-<h3>Order Details</h3>
+<h3>Szczegóły Zamówienia</h3>
 <ul>
-    <li>Order Date: @Model.OrderDate</li>
-    <li>Delivery Method: @Model.DeliveryMethod</li>
-    <li>Address: @Model.Address</li>
+    <li>Data Zamówienia: @Model.OrderDate</li>
+    <li>Metoda Dostawy: @Model.DeliveryMethod</li>
+    <li>Adres: @Model.Address</li>
 </ul>
 
-<h3>Items</h3>
+<h3>Elementy</h3>
 <ul>
     @foreach (var item in Model.OrderItems)
     {
-        <li>@item.Item.Name - @item.Quantity x @item.Item.Price.ToString("C") = @(item.Quantity * item.Item.Price).ToString("C")</li>
+        <li>@item.Item.Name - @item.Quantity x @item.Item.Price zł = @(item.Quantity * item.Item.Price) zł</li>
     }
 </ul>

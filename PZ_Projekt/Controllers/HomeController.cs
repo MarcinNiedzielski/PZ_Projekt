@@ -16,7 +16,18 @@ namespace PZ_Projekt.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string sortOrder, string categoryFilter)
+        public IActionResult Index()
+        {
+            
+            var latestItems = _context.Item
+                .OrderByDescending(i => i.Id)
+                .Take(6)
+                .ToList();
+
+            return View(latestItems);
+        }
+
+        public IActionResult Products(string sortOrder, string categoryFilter)
         {
             ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["PriceSortParam"] = sortOrder == "price_asc" ? "price_desc" : "price_asc";
@@ -48,6 +59,11 @@ namespace PZ_Projekt.Controllers
 
             var items = itemsQuery.ToList();
             return View(items);
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

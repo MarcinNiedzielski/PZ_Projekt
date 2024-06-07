@@ -4,40 +4,12 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+
 <div class="container">
     <div class="row">
-        <!-- Filtry -->
-        <div class="col-md-3">
-            <h4 class="mb-3">Kategoria:</h4>
-            <!-- Formularz filtrowania według kategorii -->
-            <form asp-action="Index" asp-controller="Home" method="get" class="form-group">
-                <div class="btn-group-vertical" role="group" aria-label="Filtruj po kategorii">
-                    <button type="submit" name="categoryFilter" value="" class="btn btn-secondary">Wszystkie</button>
-                    <button type="submit" name="categoryFilter" value="GPU" class="btn btn-secondary">GPU</button>
-                    <button type="submit" name="categoryFilter" value="CPU" class="btn btn-secondary">CPU</button>
-                    <button type="submit" name="categoryFilter" value="RAM" class="btn btn-secondary">RAM</button>
-                    <button type="submit" name="categoryFilter" value="zasilacze" class="btn btn-secondary">Zasilacze</button>
-                    <button type="submit" name="categoryFilter" value="dysk" class="btn btn-secondary">Dysk</button>
-                    <button type="submit" name="categoryFilter" value="chłodzenie" class="btn btn-secondary">Chłodzenie</button>
-                </div>
-                <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
-            </form>
-            <!-- Formularz filtrowania według sortowania -->
-            <form asp-action="Index" asp-controller="Home" method="get" class="form-group mt-3">
-                <h4 class="mb-3">Sortuj według:</h4>
-                <select id="sortOrder" name="sortOrder" class="form-control" style="max-width: 150px;">
-                    <option value="">Nazwa (A-Z)</option>
-                    <option value="name_desc">Nazwa (Z-A)</option>
-                    <option value="price_asc">Cena (rosnąco)</option>
-                    <option value="price_desc">Cena (malejąco)</option>
-                </select>
-                <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
-                <button type="submit" class="btn btn-primary mt-3">Filtruj</button>
-            </form>
-        </div>
-        <!-- Produkty -->
-        <div class="col-md-9">
-            <h1 class="display-4">Witamy w naszym sklepie internetowym!</h1>
+        <div class="col-md-12">
+            <h1 class="display-4">Witamy w sklepie PCParts!</h1>
             <p>Zobacz nasze najnowsze produkty:</p>
             <div class="row">
                 @foreach (var item in Model)
@@ -55,7 +27,6 @@
                     </div>
                 }
             </div>
-            <a href="@Url.Action("Index", "Cart")" class="btn btn-primary">Przejdź do koszyka</a>
         </div>
     </div>
 </div>
@@ -66,7 +37,7 @@
             $('.addToCartButton').click(function () {
                 var itemId = $(this).data('item-id');
                 $.post('@Url.Action("AddToCart", "Cart")', { id: itemId }, function (data) {
-
+                    // Handle post response if needed
                 });
             });
         });
