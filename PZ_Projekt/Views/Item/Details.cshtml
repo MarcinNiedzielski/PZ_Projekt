@@ -1,42 +1,42 @@
 ﻿@model PZ_Projekt.Models.Item
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Szczegóły";
     bool isAdmin = User.IsInRole("Administrator");
 }
 
-<h1>Details</h1>
+<h1>Szczegóły</h1>
 
 <div>
-    <h4>Item Details</h4>
+    <h4>Szczegóły produktu</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            <strong>Name:</strong>
+            <strong>Nazwa:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
-            <strong>Description:</strong>
+            <strong>Opis:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
-            <strong>Price:</strong>
+            <strong>Cena:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class="col-sm-2">
-            <strong>Category:</strong>
+            <strong>Kategoria:</strong>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Category)
         </dd>
         <dt class="col-sm-2">
-            <strong>Image:</strong>
+            <strong>Zdjęcie:</strong>
         </dt>
         <dd class="col-sm-10">
             <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 200px; max-height: 200px;" />
@@ -55,7 +55,7 @@
 @if (isAdmin)
 {
     <div>
-        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edytuj</a> |
+        <a asp-action="Index">Powrót do Listy</a>
     </div>
 }

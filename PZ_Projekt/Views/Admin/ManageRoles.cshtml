@@ -4,18 +4,18 @@
 @model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
 
 @{
-    ViewData["Title"] = "Manage Roles";
+    ViewData["Title"] = "Zarządzaj Rolami Użytkowników";
 }
 
-<h1>Manage User Roles</h1>
+<h1>Zarządzaj Rolami Użytkowników</h1>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Username</th>
+            <th>Nazwa użytkownika</th>
             <th>Email</th>
-            <th>Role</th>
-            <th>Action</th>
+            <th>Rola</th>
+            <th>Akcja</th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
                     }
                     else
                     {
-                        <span class="badge badge-secondary" style="color:black;">User</span>
+                        <span class="badge badge-secondary" style="color:black;">Użytkownik</span>
                     }
                 </td>
                 <td>
@@ -39,14 +39,14 @@
                     {
                         <form asp-action="RemoveFromAdminRole" asp-controller="Admin">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-danger">Remove from Admin Role</button>
+                            <button type="submit" class="btn btn-danger">Usuń z Roli Administratora</button>
                         </form>
                     }
                     else
                     {
                         <form asp-action="AddToAdminRole" asp-controller="Admin">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-success">Add to Admin Role</button>
+                            <button type="submit" class="btn btn-success">Dodaj do Roli Administratora</button>
                         </form>
                     }
                 </td>
