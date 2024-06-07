@@ -1,33 +1,33 @@
 ﻿@model PZ_Projekt.Models.Order
 
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = "Podsumowanie zamówienia";
 }
 
-<h1>Checkout</h1>
+<h1>Podsumowanie zamówienia</h1>
 
 <form asp-action="Checkout" method="post">
     <input type="hidden" asp-for="Status" />
 
     <div class="form-group">
-        <label asp-for="DeliveryMethod"></label>
+        <label asp-for="DeliveryMethod">Metoda dostawy:</label>
         <select asp-for="DeliveryMethod" class="form-control">
             <option value="Pickup">Odbiór w sklepie</option>
             <option value="Courier">Kurier za pobraniem</option>
         </select>
     </div>
     <div class="form-group">
-        <label asp-for="Address"></label>
+        <label asp-for="Address">Adres dostawy:</label>
         <input asp-for="Address" class="form-control" />
     </div>
 
-    <h3>Items</h3>
+    <h3>Zamówione produkty:</h3>
     <ul>
         @foreach (var item in Model.OrderItems)
         {
-            <li>@item.Item.Name - @item.Quantity x @item.Item.Price.ToString("C") = @(item.Quantity * item.Item.Price).ToString("C")</li>
+            <li>@item.Item.Name - @item.Quantity x @item.Item.Price.ToString("C") = @(item.Quantity * item.Item.Price) zł</li>
         }
     </ul>
 
-    <button type="submit" class="btn btn-primary">Submit Order</button>
+    <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
 </form>

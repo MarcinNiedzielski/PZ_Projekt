@@ -1,28 +1,28 @@
 ﻿@model IEnumerable<PZ_Projekt.Models.Order>
 
 @{
-    ViewData["Title"] = "All Orders";
+    ViewData["Title"] = "Wszystkie Zamówienia";
     bool isAdmin = User.IsInRole("Administrator");
 }
 
-<h1>All Orders</h1>
+<h1>Wszystkie Zamówienia</h1>
 
 @if (!Model.Any())
 {
-    <p>No orders available.</p>
+    <p>Brak dostępnych zamówień.</p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Order Date</th>
-                <th>Delivery Method</th>
-                <th>Address</th>
+                <th>Data zamówienia</th>
+                <th>Metoda dostawy</th>
+                <th>Adres</th>
                 <th>Status</th>
-                <th>Total</th>
-                <th>User</th> <!-- Dodajemy nagłówek kolumny dla użytkownika -->
-                <th>Actions</th>
+                <th>Suma</th>
+                <th>Użytkownik</th> <!-- Dodaliśmy nagłówek kolumny dla użytkownika -->
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -33,16 +33,16 @@ else
                     <td>@order.DeliveryMethod</td>
                     <td>@order.Address</td>
                     <td>@order.Status</td>
-                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price).ToString("C")</td>
+                    <td>@order.OrderItems.Sum(item => item.Quantity * item.Item.Price) zł</td> <!-- Dodaliśmy zł na końcu -->
                     <td>@order.UserId</td> <!-- Wyświetlamy UserId -->
                     <td>
-                        <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Details</a>
+                        <a asp-controller="Order" asp-action="OrderConfirmation" asp-route-orderId="@order.Id" class="btn btn-info">Szczegóły</a>
                         @if (isAdmin)
                         {
                             <form asp-action="ChangeOrderStatus" asp-controller="Order" method="post">
                                 <input type="hidden" name="id" value="@order.Id" />
                                 <div class="form-group">
-                                    <label for="status">New Status:</label>
+                                    <label for="status">Nowy status:</label>
                                     <select id="status" name="status" class="form-control">
                                         <option value="Nowe">Nowe</option>
                                         <option value="W trakcie">W trakcie</option>
@@ -52,12 +52,12 @@ else
                                         <option value="Zakończone">Zakończone</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Change Status</button>
+                                <button type="submit" class="btn btn-primary">Zmień status</button>
                             </form>
                         }
                         <form asp-controller="Order" asp-action="RemoveOrder" method="post">
                             <input type="hidden" name="id" value="@order.Id" />
-                            <button type="submit" class="btn btn-danger">Remove</button>
+                            <button type="submit" class="btn btn-danger">Usuń</button>
                         </form>
                     </td>
                 </tr>
