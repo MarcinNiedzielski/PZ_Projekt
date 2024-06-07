@@ -1,0 +1,72 @@
+﻿@model List<PZ_Projekt.Models.Item>
+
+@{
+    ViewData["Title"] = "Nasze Produkty";
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Filtry -->
+        <div class="col-md-3">
+            <h4 class="mb-3">Kategoria:</h4>
+            <!-- Formularz filtrowania według kategorii -->
+            <form asp-action="Products" asp-controller="Home" method="get" class="form-group">
+                <div class="btn-group-vertical" role="group" aria-label="Filtruj po kategorii">
+                    <button type="submit" name="categoryFilter" value="" class="btn btn-light btn-outline-dark">Wszystkie</button>
+                    <button type="submit" name="categoryFilter" value="GPU" class="btn btn-light btn-outline-dark">GPU</button>
+                    <button type="submit" name="categoryFilter" value="CPU" class="btn btn-light btn-outline-dark">CPU</button>
+                    <button type="submit" name="categoryFilter" value="RAM" class="btn btn-light btn-outline-dark">RAM</button>
+                    <button type="submit" name="categoryFilter" value="zasilacze" class="btn btn-light btn-outline-dark">Zasilacze</button>
+                    <button type="submit" name="categoryFilter" value="dysk" class="btn btn-light btn-outline-dark">Dysk</button>
+                    <button type="submit" name="categoryFilter" value="chłodzenie" class="btn btn-light btn-outline-dark">Chłodzenie</button>
+                </div>
+                <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
+            </form>
+            <!-- Formularz filtrowania według sortowania -->
+            <form asp-action="Products" asp-controller="Home" method="get" class="form-group mt-3">
+                <h4 class="mb-3">Sortuj według:</h4>
+                <select id="sortOrder" name="sortOrder" class="form-control" style="max-width: 150px;">
+                    <option value="">Nazwa (A-Z)</option>
+                    <option value="name_desc">Nazwa (Z-A)</option>
+                    <option value="price_asc">Cena (rosnąco)</option>
+                    <option value="price_desc">Cena (malejąco)</option>
+                </select>
+                <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
+                <button type="submit" class="btn btn-primary mt-3">Filtruj</button>
+            </form>
+        </div>
+        <!-- Produkty -->
+        <div class="col-md-9">
+            <h1 class="display-4">Nasze Produkty</h1>
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text">@item.Price.ToString("C")</p>
+                                <a href="@Url.Action("Details", "Item", new { id = item.Id })" class="btn btn-info mt-2">Szczegóły</a>
+                                <button class="btn btn-primary addToCartButton mt-2" data-item-id="@item.Id">Dodaj do koszyka</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.addToCartButton').click(function () {
+                var itemId = $(this).data('item-id');
+                $.post('@Url.Action("AddToCart", "Cart")', { id: itemId }, function (data) {
+
+                });
+            });
+        });
+    </script>
+}
