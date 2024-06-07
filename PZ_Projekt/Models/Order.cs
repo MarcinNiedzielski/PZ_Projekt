@@ -14,10 +14,10 @@ namespace PZ_Projekt.Models
         [Required]
         public DateTime OrderDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Metoda dostawy jest wymagana.")]
         public string DeliveryMethod { get; set; } // "Pickup" or "Courier"
 
-        [Required]
+        [Required(ErrorMessage = "Adres dostawy jest wymagany.")]
         public string Address { get; set; } // Address for delivery
 
         public string? Status { get; set; } // Status of the order

@@ -73,27 +73,53 @@ namespace PZ_Projekt.Controllers
             if (string.IsNullOrEmpty(deliveryMethod) || string.IsNullOrEmpty(address))
             {
                 ModelState.AddModelError("", "Delivery method and address are required.");
+
+                // Przekazujemy model Order ponownie do widoku
                 return View(order);
             }
 
-            order.UserId = userId;
-            order.OrderDate = DateTime.Now;
-            order.DeliveryMethod = deliveryMethod;
-            order.Address = address;
-            order.OrderItems = cart.CartItems.Select(ci => new OrderItem
+            // Jeśli istnieje ID zamówienia, pobierz istniejący obiekt Order z bazy danych
+            if (order.Id != 0)
             {
-                ItemId = ci.ItemId,
-                Quantity = ci.Quantity
-            }).ToList();
+                var existingOrder = await _context.Order
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.Id == order.Id);
 
-            _context.Order.Add(order);
+                if (existingOrder == null)
+                {
+                    return NotFound();
+                }
+
+                // Zaktualizuj istniejący obiekt Order
+                existingOrder.DeliveryMethod = deliveryMethod;
+                existingOrder.Address = address;
+
+                _context.Order.Update(existingOrder);
+            }
+            else
+            {
+                // Utwórz nowy obiekt Order
+                order.UserId = userId;
+                order.OrderDate = DateTime.Now;
+                order.DeliveryMethod = deliveryMethod;
+                order.Address = address;
+                order.OrderItems = cart.CartItems.Select(ci => new OrderItem
+                {
+                    ItemId = ci.ItemId,
+                    Quantity = ci.Quantity
+                }).ToList();
+
+                _context.Order.Add(order);
+            }
+
+            // Usuń koszyk i zapisz zmiany w bazie danych
             _context.CartItem.RemoveRange(cart.CartItems);
             _context.Cart.Remove(cart);
-
             await _context.SaveChangesAsync();
 
             return RedirectToAction("OrderConfirmation", new { orderId = order.Id });
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
