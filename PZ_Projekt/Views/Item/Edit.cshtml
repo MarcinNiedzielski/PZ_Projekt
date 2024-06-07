@@ -1,33 +1,41 @@
 ﻿@model PZ_Projekt.Models.Item
 
 @{
-    ViewData["Title"] = "Edytuj";
+    ViewData["Title"] = "Edytuj"; // Ustawia tytuł strony na "Edytuj"
 }
 
 <h1>Edytuj</h1>
 
 <div class="row">
     <div class="col-md-4">
+        <!-- Formularz do edycji produktu, przesyłający dane metodą POST -->
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <!-- Wyświetla podsumowanie walidacji, jeśli wystąpią błędy -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Ukryte pole z identyfikatorem produktu -->
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
+                <!-- Etykieta dla pola nazwy produktu -->
                 <label asp-for="Name" class="control-label">Nazwa:</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Etykieta dla pola opisu produktu -->
                 <label asp-for="Description" class="control-label">Opis:</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Etykieta dla pola ceny produktu -->
                 <label asp-for="Price" class="control-label">Cena:</label>
                 <input asp-for="Price" class="form-control" type="number" step="0.01" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Etykieta dla pola kategorii produktu -->
                 <label asp-for="Category" class="control-label">Kategoria:</label>
+                <!-- Pole wyboru dla kategorii produktu -->
                 <select asp-for="Category" class="form-control">
                     <option value="GPU">GPU</option>
                     <option value="CPU">CPU</option>
@@ -36,14 +44,17 @@
                     <option value="dysk">dysk</option>
                     <option value="chłodzenie">chłodzenie</option>
                 </select>
+                <!-- Wyświetla komunikat walidacyjny dla pola kategorii -->
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Etykieta dla pola pliku obrazu produktu -->
                 <label asp-for="ImageFile" class="control-label">Zdjęcie:</label>
                 <input asp-for="ImageFile" type="file" class="form-control" />
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Przycisk do przesłania formularza -->
                 <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>
         </form>
@@ -51,11 +62,13 @@
 </div>
 
 <div>
+    <!-- Link do powrotu do listy produktów -->
     <a asp-action="Index">Powrót do Listy</a>
 </div>
 
 @section Scripts {
     @{
+        // Włącza skrypty walidacyjne
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

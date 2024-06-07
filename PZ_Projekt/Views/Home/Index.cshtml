@@ -4,23 +4,25 @@
     ViewData["Title"] = "Home Page";
 }
 
-
-
-
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1 class="display-4">Witamy w sklepie PCParts!</h1>
             <p>Zobacz nasze najnowsze produkty:</p>
             <div class="row">
+                <!-- Pętla wyświetlająca produkty -->
                 @foreach (var item in Model)
                 {
                     <div class="col-md-4">
                         <div class="card mb-3">
-                            <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name" style="max-height: 200px; object-fit: scale-down;" class="card-img-top">
+                            <!-- Obrazek produktu -->
+                            <img class="card-img-top" src="@item.ImageUrl" alt="@item.Name" style="max-height: 200px; object-fit: scale-down;">
                             <div class="card-body">
+                                <!-- Nazwa produktu -->
                                 <h5 class="card-title">@item.Name</h5>
+                                <!-- Cena produktu -->
                                 <p class="card-text">@item.Price.ToString("C")</p>
+                                <!-- Przyciski do szczegółów produktu i dodania do koszyka -->
                                 <a href="@Url.Action("Details", "Item", new { id = item.Id })" class="btn btn-info mt-2">Szczegóły</a>
                                 <button class="btn btn-primary addToCartButton mt-2" data-item-id="@item.Id">Dodaj do koszyka</button>
                             </div>
@@ -33,12 +35,12 @@
 </div>
 
 @section Scripts {
+    <!-- Skrypt obsługujący dodawanie produktów do koszyka -->
     <script>
         $(document).ready(function () {
             $('.addToCartButton').click(function () {
                 var itemId = $(this).data('item-id');
                 $.post('@Url.Action("AddToCart", "Cart")', { id: itemId }, function (data) {
-                    // Handle post response if needed
                 });
             });
         });

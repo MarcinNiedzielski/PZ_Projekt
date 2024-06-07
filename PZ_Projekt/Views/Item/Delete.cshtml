@@ -10,47 +10,58 @@
 <div>
     @if (Model != null)
     {
+        <!-- Wyświetlanie szczegółów produktu w formacie listy definicji (dl) -->
         <dl class="row">
             <dt class="col-sm-2">
                 <strong>Nazwa:</strong>
             </dt>
             <dd class="col-sm-10">
+                <!-- Wyświetlanie nazwy produktu -->
                 @Html.DisplayFor(model => model.Name)
             </dd>
             <dt class="col-sm-2">
                 <strong>Opis:</strong>
             </dt>
             <dd class="col-sm-10">
+                <!-- Wyświetlanie opisu produktu -->
                 @Html.DisplayFor(model => model.Description)
             </dd>
             <dt class="col-sm-2">
                 <strong>Cena:</strong>
             </dt>
             <dd class="col-sm-10">
+                <!-- Wyświetlanie ceny produktu -->
                 @Html.DisplayFor(model => model.Price)
             </dd>
             <dt class="col-sm-2">
                 <strong>Kategoria:</strong>
             </dt>
             <dd class="col-sm-10">
+                <!-- Wyświetlanie kategorii produktu -->
                 @Html.DisplayFor(model => model.Category)
             </dd>
             <dt class="col-sm-2">
                 <strong>Zdjęcie:</strong>
             </dt>
             <dd class="col-sm-10">
+                <!-- Wyświetlanie obrazu produktu -->
                 <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 200px; max-height: 200px;" />
             </dd>
         </dl>
 
+        <!-- Formularz do potwierdzenia usunięcia produktu -->
         <form asp-action="Delete">
+            <!-- Ukryte pole do przesłania Id produktu -->
             <input type="hidden" asp-for="Id" />
+            <!-- Przycisk do zatwierdzenia usunięcia -->
             <input type="submit" value="Usuń" class="btn btn-danger" /> |
+            <!-- Link powrotu do listy produktów -->
             <a asp-action="Index">Powrót do Listy</a>
         </form>
     }
     else
     {
+        <!-- Komunikat w przypadku, gdy produkt nie został znaleziony -->
         <p>Produkt nie został znaleziony.</p>
     }
 </div>
