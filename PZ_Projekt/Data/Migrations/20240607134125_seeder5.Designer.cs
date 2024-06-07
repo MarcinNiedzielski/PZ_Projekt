@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PZ_Projekt.Data;
 
@@ -11,9 +12,11 @@ using PZ_Projekt.Data;
 namespace PZ_Projekt.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240607134125_seeder5")]
+    partial class seeder5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,14 +50,6 @@ namespace PZ_Projekt.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "03542356-7e04-4799-9124-a1e927d63628",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -145,40 +140,6 @@ namespace PZ_Projekt.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e70a9c29-ca05-41d6-aa4a-f876f9ed833f",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "d25bb904-d2ad-489d-906b-f58fcf737e6e",
-                            Email = "a@a.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = true,
-                            NormalizedEmail = "A@A.COM",
-                            NormalizedUserName = "A@A.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAwVc2aVRiKlYfqvPyiY6ZobmecB15it3IRUmboduoLCvZlZPiKhaJPrtVSbjXcxVQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "BBXP2X4LWHMYHRI33EGOAGAX4TK5KR56",
-                            TwoFactorEnabled = false,
-                            UserName = "a@a.com"
-                        },
-                        new
-                        {
-                            Id = "f274a51c-071b-457b-8918-2264d7342b04",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "849a9e5f-4516-430e-acfd-864e1cea920f",
-                            Email = "admin@admin.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = true,
-                            NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMwDf+gJp4KV3KrBQDzbMOJN0HNOAGZi51iqGZ82qFr1cuXkxqKAy5D7oCPcA1O+mw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "DPZHW7DGCJFC6ZF6WYKNBF2IJBOI6WXZ",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@admin.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -243,13 +204,6 @@ namespace PZ_Projekt.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "f274a51c-071b-457b-8918-2264d7342b04",
-                            RoleId = "03542356-7e04-4799-9124-a1e927d63628"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
