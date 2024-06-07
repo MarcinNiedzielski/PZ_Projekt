@@ -37,6 +37,9 @@
                 }
             </tbody>
         </table>
+        <div>
+            <h4>Suma: @Model.Sum(item => item.Quantity * item.Item.Price).ToString("C")</h4>
+        </div>
         <a href="@Url.Action("Checkout", "Order")" class="btn btn-primary">Przejdź do kasy</a>
     }
 </div>
