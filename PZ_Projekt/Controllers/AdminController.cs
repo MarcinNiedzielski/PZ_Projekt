@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Models;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PZ_Projekt.Controllers
 {
@@ -26,7 +27,11 @@ namespace PZ_Projekt.Controllers
         // GET: /Admin/ManageRoles
         public async Task<IActionResult> ManageRoles()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var currentUser = await _userManager.GetUserAsync(User);
+            var users = await _userManager.Users
+                .Where(u => u.Id != currentUser.Id)
+                .ToListAsync();
+
             return View(users);
         }
 
