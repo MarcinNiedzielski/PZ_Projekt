@@ -18,7 +18,7 @@ namespace PZ_Projekt.Controllers
 
         public IActionResult Index()
         {
-            
+
             var latestItems = _context.Item
                 .OrderByDescending(i => i.Id)
                 .Take(6)

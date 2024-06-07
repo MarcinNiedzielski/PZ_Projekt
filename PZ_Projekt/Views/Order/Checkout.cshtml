@@ -1,7 +1,7 @@
 ﻿@model PZ_Projekt.Models.Order
 
 @{
-    ViewData["Title"] = "Podsumowanie zamówienia";
+    ViewData["Title"] = "Składanie zamówienia";
 }
 
 <h1>Podsumowanie zamówienia</h1>
@@ -12,7 +12,6 @@
     <div class="form-group">
         <label asp-for="DeliveryMethod">Metoda dostawy:</label>
         <select asp-for="DeliveryMethod" class="form-control">
-            <option value="">Wybierz metodę dostawy</option>
             <option value="Pickup">Odbiór w sklepie</option>
             <option value="Courier">Kurier za pobraniem</option>
         </select>
@@ -24,9 +23,6 @@
         <input asp-for="Address" class="form-control" />
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
-
-  
-
 
 
     <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
