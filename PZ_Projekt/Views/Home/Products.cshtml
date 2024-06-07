@@ -21,6 +21,7 @@
                     <button type="submit" name="categoryFilter" value="chłodzenie" class="btn btn-light btn-outline-dark">Chłodzenie</button>
                 </div>
                 <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
+                <input type="hidden" id="searchString" name="searchString" value="@ViewBag.SearchString" />
             </form>
             <!-- Formularz filtrowania według sortowania -->
             <form asp-action="Products" asp-controller="Home" method="get" class="form-group mt-3">
@@ -32,12 +33,24 @@
                     <option value="price_desc">Cena (malejąco)</option>
                 </select>
                 <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
+                <input type="hidden" id="searchString" name="searchString" value="@ViewBag.SearchString" />
                 <button type="submit" class="btn btn-primary mt-3">Filtruj</button>
             </form>
         </div>
         <!-- Produkty -->
         <div class="col-md-9">
             <h1 class="display-4">Nasze Produkty</h1>
+            <!-- Wyszukiwarka -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <form asp-action="Products" asp-controller="Home" method="get" class="form-inline">
+                        <input type="text" id="searchString" name="searchString" class="form-control mr-2" placeholder="Szukaj..." value="@ViewBag.SearchString" />
+                        <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.SortOrder" />
+                        <input type="hidden" id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter" />
+                        <button type="submit" class="btn btn-primary">Szukaj</button>
+                    </form>
+                </div>
+            </div>
             <div class="row">
                 @foreach (var item in Model)
                 {
