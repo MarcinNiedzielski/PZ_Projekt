@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PZ_Projekt.Data;
 using PZ_Projekt.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -180,6 +181,37 @@ namespace PZ_Projekt.Controllers
         private bool ItemExists(int id)
         {
             return _context.Item.Any(e => e.Id == id);
+        }
+
+        public class AllowedExtensionsAttribute : ValidationAttribute
+        {
+            private readonly string[] _extensions;
+
+            public AllowedExtensionsAttribute(string[] extensions)
+            {
+                _extensions = extensions;
+            }
+
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                if (value == null)
+                    return ValidationResult.Success;
+
+                var file = value as IFormFile;
+                var extension = Path.GetExtension(file.FileName);
+
+                if (file == null || Array.IndexOf(_extensions, extension.ToLower()) == -1)
+                {
+                    return new ValidationResult(GetErrorMessage());
+                }
+
+                return ValidationResult.Success;
+            }
+
+            private string GetErrorMessage()
+            {
+                return $"Dozwolone rozszerzenia plików: {string.Join(", ", _extensions)}";
+            }
         }
     }
 }
